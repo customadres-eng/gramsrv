@@ -95,8 +95,10 @@ func (t *FFmpegGIFTranscoder) Transcode(ctx context.Context, data []byte) (GIFVi
 		return GIFVideo{}, fmt.Errorf("create gif output: %w", err)
 	}
 	outputPath := output.Name()
-	defer output.Close()
 	defer os.Remove(outputPath)
+	if err := output.Close(); err != nil {
+		return GIFVideo{}, fmt.Errorf("close gif output: %w", err)
+	}
 
 	cmd := exec.CommandContext(runCtx, t.ffmpeg,
 		"-hide_banner", "-loglevel", "error", "-y",
