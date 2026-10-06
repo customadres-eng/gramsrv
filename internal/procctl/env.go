@@ -237,5 +237,6 @@ func (m *Manager) WriteEnvValues(values map[string]string) error {
 		}
 		out = append(out, raw)
 	}
-	return os.WriteFile(filepath.Join(m.Root, ".env"), []byte(strings.Join(out, "\n")+"\n"), 0o644)
+	// .env 含密码/密钥/DSN（见 sensitiveKeyRe），首次创建时收紧权限。
+	return os.WriteFile(filepath.Join(m.Root, ".env"), []byte(strings.Join(out, "\n")+"\n"), 0o600)
 }

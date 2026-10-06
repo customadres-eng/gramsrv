@@ -3,6 +3,7 @@ package botapi
 import (
 	"context"
 	"crypto/rand"
+	"crypto/subtle"
 	"encoding/binary"
 	"encoding/json"
 	"errors"
@@ -1400,7 +1401,7 @@ func (h *handler) authenticate(ctx context.Context, token string) (int64, bool) 
 		return 0, false
 	}
 	profile, found, err := h.bots.BotInfo(ctx, botID)
-	if err != nil || !found || profile.TokenSecret != secret {
+	if err != nil || !found || subtle.ConstantTimeCompare([]byte(profile.TokenSecret), []byte(secret)) != 1 {
 		return 0, false
 	}
 	return botID, true

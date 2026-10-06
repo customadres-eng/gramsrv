@@ -12,7 +12,7 @@ func (r *Router) onChannelsGetLeftChannels(ctx context.Context, offset int) (tg.
 	}
 	userID, _, err := r.currentUserID(ctx)
 	if err != nil {
-		return nil, err
+		return nil, internalErr()
 	}
 	if r.deps.Channels == nil {
 		return &tg.MessagesChats{Chats: []tg.ChatClass{}}, nil
@@ -38,7 +38,7 @@ func (r *Router) onChannelsGetLeftChannels(ctx context.Context, offset int) (tg.
 func (r *Router) onChannelsGetInactiveChannels(ctx context.Context) (*tg.MessagesInactiveChats, error) {
 	userID, _, err := r.currentUserID(ctx)
 	if err != nil {
-		return nil, err
+		return nil, internalErr()
 	}
 	if r.deps.Channels == nil {
 		return &tg.MessagesInactiveChats{Dates: []int{}, Chats: []tg.ChatClass{}, Users: []tg.UserClass{}}, nil

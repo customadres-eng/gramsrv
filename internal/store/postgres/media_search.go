@@ -134,7 +134,7 @@ WHERE mi.owner_user_id = $1 AND mi.peer_id = $2 AND mi.category = ANY($3::smalli
 		add(" AND mi.box_id > $%d", pgInt32NonNegative(req.MinID))
 	}
 	if req.Query != "" {
-		add(" AND mb.body ILIKE '%%' || $%d || '%%'", req.Query)
+		add(" AND mb.body ILIKE $%d ESCAPE '\\'", "%"+escapeLike(req.Query)+"%")
 	}
 	if req.SenderUserID != 0 {
 		add(" AND mb.from_user_id = $%d", req.SenderUserID)
@@ -198,7 +198,7 @@ WHERE mi.channel_id = $1 AND mi.category = ANY($2::smallint[])
 		add(" AND mi.id > $%d", pgInt32NonNegative(req.MinID))
 	}
 	if req.Query != "" {
-		add(" AND m.body ILIKE '%%' || $%d || '%%'", req.Query)
+		add(" AND m.body ILIKE $%d ESCAPE '\\'", "%"+escapeLike(req.Query)+"%")
 	}
 	if req.SenderUserID != 0 {
 		add(" AND m.sender_user_id = $%d", req.SenderUserID)

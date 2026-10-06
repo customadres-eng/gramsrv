@@ -56,8 +56,8 @@ AND EXISTS (
 )`
 	}
 	if filter.Query != "" {
-		baseArgs = append(baseArgs, filter.Query)
-		base += fmt.Sprintf(" AND body ILIKE '%%' || $%d || '%%'", len(baseArgs))
+		baseArgs = append(baseArgs, "%"+escapeLike(filter.Query)+"%")
+		base += fmt.Sprintf(" AND body ILIKE $%d ESCAPE '\\'", len(baseArgs))
 	}
 	if filter.SenderUserID != 0 {
 		baseArgs = append(baseArgs, filter.SenderUserID)
