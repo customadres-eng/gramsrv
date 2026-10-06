@@ -1354,6 +1354,9 @@ ORDER BY pp.owner_peer_id, pp.sort_order DESC
 
 func (s *MediaStore) ListProfilePhotosKind(ctx context.Context, ownerType domain.PeerType, ownerID int64, kind domain.ProfilePhotoKind, offset, limit int, maxID int64) ([]int64, int, error) {
 	kind = normalizeProfilePhotoKind(kind)
+	if limit <= 0 {
+		return nil, 0, nil
+	}
 	rows, err := s.db.Query(ctx, `
 SELECT photo_id
 FROM profile_photos

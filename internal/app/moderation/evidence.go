@@ -281,11 +281,11 @@ func (s *Service) ReportReaction(ctx context.Context, req domain.ModerationReact
 		if s == nil || s.privateMessages == nil {
 			return domain.ModerationReport{}, false, domain.ErrModerationReportInvalid
 		}
-		result, err := s.privateMessages.GetMessageReactions(ctx, req.ReporterUserID, domain.PrivateMessageReactionsRequest{
+		result, fetchErr := s.privateMessages.GetMessageReactions(ctx, req.ReporterUserID, domain.PrivateMessageReactionsRequest{
 			OwnerUserID: req.ReporterUserID, Peer: req.Target, IDs: []int{req.MessageID},
 		})
-		if err != nil {
-			return domain.ModerationReport{}, false, err
+		if fetchErr != nil {
+			return domain.ModerationReport{}, false, fetchErr
 		}
 		if len(result.Messages) != 1 || result.Messages[0].ID != req.MessageID ||
 			result.Messages[0].Peer != req.Target {
